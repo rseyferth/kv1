@@ -1,0 +1,8 @@
+{
+    "name": "wipkip/kv1",
+    "autoload": {
+        "psr-4": {
+            "Wipkip\\Kv1\\": "src/"
+        }
+    }
+}
