@@ -22,7 +22,7 @@ class Archive
 		$this->publishedAt = $publishedAt;
 
 		$this->filename = pathinfo($url, PATHINFO_BASENAME);
-		$this->path = self::$storagePath . '/kv1/' . date('Y-M-d') . '/' . $this->filename;
+		$this->path = self::$storagePath . '/ndov/' . date('Y-M-d') . '/' . $this->filename;
 
 	}
 
@@ -55,6 +55,39 @@ class Archive
 	///////////////////////////////
 
 	public function unpack() {
+
+		// Zip or gz
+		if (pathinfo($this->path, PATHINFO_EXTENSION) == 'gz') {
+			return $this->unpackGZip();
+		} else {
+			return $this->unpackZip();
+		}
+		
+	}
+
+	public function unpackGZip() {
+
+		// Output file
+		$this->extractedPath = $outputPath = preg_replace('/\.gz$/', '', $this->path);
+		$input = gzopen($this->path, 'rb');
+		$output = fopen($outputPath, 'wb');
+
+		// Read zipped content
+		while (!gzeof($input)) {
+
+			// Read and write buffer
+			fwrite($output, gzread($input, 4096));
+
+		}
+
+		// Done.
+		fclose($input);
+		fclose($output);
+		return true;
+
+	}
+
+	public function unpackZip() {
 
 		// Load it
 		$zip = new ZipArchive();
