@@ -58,6 +58,11 @@ class Reader
 
 		// Parse it.
 		$values = explode(self::$separator, trim($line));
+
+		// Header row containing [Name]?
+		if (preg_match('/^\[.+\]$/', head($values))) return null;
+
+		// Create instance
 		$model = $this->modelClass::create($values);
 
 		return $model;
